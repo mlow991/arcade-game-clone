@@ -1,3 +1,13 @@
+var Entity = function() {
+
+}
+
+Entity.prototype.init = function(loc) {
+    var obj = {x : loc[0], y : loc[1]};
+    return obj;
+}
+
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -8,12 +18,10 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     //Set enemy initial location, choose lane, set speed
-    Enemy.initialize = function(pos, speed) {
-        var y = pos;
-        var v = speed * dt;
-    }
 
 }
+
+Enemy.prototype = Object.create(Entity.prototype);
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -32,10 +40,10 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    Player.prototype = Object.create(Enemy.prototype);
     this.sprite = 'images/char-boy.png';
 }
 
+Player.prototype = Object.create(Enemy.prototype);
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
