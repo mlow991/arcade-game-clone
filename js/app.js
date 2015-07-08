@@ -3,8 +3,8 @@ var Entity = function() {
 }
 
 Entity.prototype.init = function(loc) {
-    var obj = {x : loc[0], y : loc[1]};
-    return obj;
+    this.x = loc[0];
+    this.y = loc[1];
 }
 
 
@@ -17,8 +17,13 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
-    //Set enemy initial location, choose lane, set speed
-
+    //Set enemy initial location, choose lane, set spee
+    var x;
+    var y;
+    var lane;
+    var speed;
+    var obj = Object.create(Entity.prototype);
+    return obj;
 }
 
 Enemy.prototype = Object.create(Entity.prototype);
@@ -49,6 +54,12 @@ Player.prototype = Object.create(Enemy.prototype);
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
+/*Instatiate an object like so:
+    var dan = Enemy();
+    dan.init(p1);
+    where p1 is an array of x, y coordinates
+
+*/
 
 
 // This listens for key presses and sends the keys to your
