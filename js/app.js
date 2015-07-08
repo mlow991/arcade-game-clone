@@ -22,7 +22,7 @@ var Enemy = function() {
     var y;
     var lane;
     var speed;
-    var obj = Object.create(Entity.prototype);
+    var obj = Object.create(Enemy.prototype);
     return obj;
 }
 
