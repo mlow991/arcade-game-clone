@@ -11,7 +11,9 @@ Entity.prototype.init = function(loc) {
    https://developer.mozilla.org/en-US/docs/Web/
    JavaScript/Reference/Global_Objects/Math/random 
 */
-function randomNum(min, max) {
+function randomNum(range) {
+    var min = range[0];
+    var max = range[1];
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -24,16 +26,29 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
-    //Set enemy initial location, choose lane, set spee
+    // Set enemy initial location, choose lane, set speed
+    // x and y variables are set by the init function
+    // lane and speed variables are randomly generated with randomNum fn
     var x;
     var y;
-    var lane;
-    var speed;
+    var laneRange = [2, 4];
+    var lane = randomNum(laneRange);
+    var speedRange = [1, 50];
+    var speed = randomNum(speedRange);
     var obj = Object.create(Enemy.prototype);
     return obj;
 }
 
 Enemy.prototype = Object.create(Entity.prototype);
+
+Enemy.prototype.setup = function(obj, range) {
+    obj.init(range);
+    obj.speed = 10;
+}
+
+var fred = Enemy();
+fred.setup(fred, [1,2]);
+
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
