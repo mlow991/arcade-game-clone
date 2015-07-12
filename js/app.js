@@ -29,12 +29,7 @@ var Enemy = function() {
     // Set enemy initial location, choose lane, set speed
     // x and y variables are set by the init function
     // lane and speed variables are randomly generated with randomNum fn
-    var x;
-    var y;
-    var laneRange = [2, 4];
-    var lane = randomNum(laneRange);
-    var speedRange = [1, 50];
-    var speed = randomNum(speedRange);
+
     var obj = Object.create(Enemy.prototype);
     return obj;
 }
@@ -42,12 +37,11 @@ var Enemy = function() {
 Enemy.prototype = Object.create(Entity.prototype);
 
 Enemy.prototype.setup = function(obj, range) {
-    obj.init(range);
-    obj.speed = 10;
+//    obj.init(range);
+    obj.x = 1;
+    obj.y = randomNum(range);
+    obj.speed = randomNum([1,5]);
 }
-
-var fred = Enemy();
-fred.setup(fred, [1,2]);
 
 
 // Update the enemy's position, required method for game
@@ -56,6 +50,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + (dt * this.speed);
 }
 
 // Draw the enemy on the screen, required method for game
@@ -68,9 +63,31 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
+    var obj = Object.create(Player.prototype);
+    return obj;
 }
 
-Player.prototype = Object.create(Enemy.prototype);
+Player.prototype = Object.create(Entity.prototype);
+
+Player.prototype.setup = function(obj, loc) {
+    obj.x = loc[0];
+    obj.y = loc[1];
+}
+
+Player.prototype.update = function(dt) {
+    //Use the handleinput function to update current position
+}
+
+Player.prototype.handleInput = function(key) {
+    if (key == 'left')
+        return this.x - 101;
+    if (key == 'up')
+        return this.y - 83;
+    if (key == 'right')
+        return this.x + 101;
+    if (key == 'down')
+        return this.y +83;
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -80,8 +97,21 @@ Player.prototype = Object.create(Enemy.prototype);
     var dan = Enemy();
     dan.init(p1);
     where p1 is an array of x, y coordinates
-
 */
+
+var enemyRange = [2, 4];
+var fred = Enemy();
+fred.setup(fred, enemyRange);
+var sam = Enemy();
+sam.setup(sam, enemyRange);
+var dave = Enemy();
+dave.setup(dave, enemyRange);
+var allEnemies = [fred, sam, dave];
+
+
+var playerStart = [303, 332];
+var player = Player();
+player.setup(player, playerStart);
 
 
 // This listens for key presses and sends the keys to your
