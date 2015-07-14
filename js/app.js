@@ -73,14 +73,34 @@ Player.prototype.setup = function(loc) {
 }
 
 Player.prototype.update = function(dt) {
-    //Use the handleinput function to update current position
+    //Use the handleInput function to update current position from keystrokes.
+    //Bounds are (x: 0 to 404), (y: 55 to 387).
+    //Global object 'move' holds the values for keys pressed.
+    //When 'move' encounters a value that is offscreen, it does not update the player object.
+    //It then resets its value to the bound of stoppage.
     console.log(move);
-    this.x = move.x;
-    this.y = move.y;
+    if (move.x >= 0 && move.x <= 404) {
+        this.x = move.x;
+    } else {
+        move.x = this.x;
+    }
+
+    if (move.y < 55) {
+        this.x = playerStart[0];
+        this.y = playerStart[1];
+        move.y = this.y;
+    } else if (move.y <= 387) {
+        this.y = move.y;
+    } else {
+        move.y = this.y;
+    }
 }
 
 
 Player.prototype.handleInput = function(key) {
+    //The input variable is a string left, right, up, down.
+    //It adds or subtracts from the global position variable for the player.
+    //The logic for player movement is within the update function.
     if (key == 'left')
         move.x += -101;
     if (key == 'up')
