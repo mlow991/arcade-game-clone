@@ -9,6 +9,13 @@ Entity.prototype.init = function(loc) {
     this.y = loc[1];
 }
 
+Entity.prototype.collision = function() {
+    allEnemies.forEach(function(enemy) {
+            if (enemy.x == player.x && enemy.y == player.y)
+                console.log("collision");
+        });
+}
+
 /* Random number generator code reference:
    https://developer.mozilla.org/en-US/docs/Web/
    JavaScript/Reference/Global_Objects/Math/random 
@@ -81,7 +88,7 @@ Player.prototype.update = function(dt) {
     //Global object 'move' holds the values for keys pressed.
     //When 'move' encounters a value that is offscreen, it does not update the player object.
     //It then resets its value to the bound of stoppage.
-    console.log(move);
+//    console.log(move);
     if (move.x >= 0 && move.x <= 404) {
         this.x = move.x;
     } else {
@@ -97,6 +104,7 @@ Player.prototype.update = function(dt) {
     } else {
         move.y = this.y;
     }
+    player.collision();
 }
 
 
