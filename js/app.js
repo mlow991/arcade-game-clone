@@ -24,13 +24,13 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
 
     // Set enemy initial location, choose lane, set speed
     // x and y variables are set by the init function
     // lane and speed variables are randomly generated with randomNum fn
 
     var obj = Object.create(Enemy.prototype);
+    obj.sprite = 'images/enemy-bug.png';
     return obj;
 }
 
@@ -40,7 +40,8 @@ Enemy.prototype.setup = function(obj, range) {
 //    obj.init(range);
     obj.x = 1;
     obj.y = randomNum(range);
-    obj.speed = randomNum([1,5]);
+    obj.y = (obj.y * 83) - 28;
+    obj.speed = randomNum([50,300]);
 }
 
 
@@ -62,12 +63,12 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.sprite = 'images/char-boy.png';
     var obj = Object.create(Player.prototype);
+    obj.sprite = 'images/char-boy.png';
     return obj;
 }
 
-Player.prototype = Object.create(Entity.prototype);
+Player.prototype = Object.create(Enemy.prototype);
 
 Player.prototype.setup = function(obj, loc) {
     obj.x = loc[0];
@@ -99,7 +100,7 @@ Player.prototype.handleInput = function(key) {
     where p1 is an array of x, y coordinates
 */
 
-var enemyRange = [2, 4];
+var enemyRange = [1, 3];
 var fred = Enemy();
 fred.setup(fred, enemyRange);
 var sam = Enemy();
@@ -108,8 +109,9 @@ var dave = Enemy();
 dave.setup(dave, enemyRange);
 var allEnemies = [fred, sam, dave];
 
+var test = Entity();
 
-var playerStart = [303, 332];
+var playerStart = [202, 332];
 var player = Player();
 player.setup(player, playerStart);
 
