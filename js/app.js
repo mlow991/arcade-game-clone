@@ -1,3 +1,5 @@
+var yOffset = -28;
+
 var Entity = function() {
 
 }
@@ -40,7 +42,7 @@ Enemy.prototype.setup = function(obj, range) {
 //    obj.init(range);
     obj.x = 1;
     obj.y = randomNum(range);
-    obj.y = (obj.y * 83) - 28;
+    obj.y = (obj.y * 83) + yOffset;
     obj.speed = randomNum([50,300]);
 }
 
@@ -77,17 +79,21 @@ Player.prototype.setup = function(obj, loc) {
 
 Player.prototype.update = function(dt) {
     //Use the handleinput function to update current position
+    console.log(move);
+    this.x = move.x;
+    this.y = move.y;
 }
+
 
 Player.prototype.handleInput = function(key) {
     if (key == 'left')
-        return this.x - 101;
+        move.x += -101;
     if (key == 'up')
-        return this.y - 83;
+        move.y += -83;
     if (key == 'right')
-        return this.x + 101;
+        move.x += 101;
     if (key == 'down')
-        return this.y +83;
+        move.y += 83;
 };
 
 // Now instantiate your objects.
@@ -111,7 +117,8 @@ var allEnemies = [fred, sam, dave];
 
 var test = Entity();
 
-var playerStart = [202, 332];
+var playerStart = [202, 332 + yOffset];
+var move = {x : playerStart[0], y : playerStart[1]};
 var player = Player();
 player.setup(player, playerStart);
 
