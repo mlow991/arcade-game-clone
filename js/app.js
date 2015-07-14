@@ -29,21 +29,18 @@ var Enemy = function() {
 
     // Set enemy initial location, choose lane, set speed
     // x and y variables are set by the init function
-    // lane and speed variables are randomly generated with randomNum fn
-
-    var obj = Object.create(Enemy.prototype);
-    obj.sprite = 'images/enemy-bug.png';
-    return obj;
+    // lane and speed variables are randomly generated with randomNum fn  
+    this.sprite = 'images/enemy-bug.png';
 }
 
 Enemy.prototype = Object.create(Entity.prototype);
 
-Enemy.prototype.setup = function(obj, range) {
+Enemy.prototype.setup = function(range) {
 //    obj.init(range);
-    obj.x = 1;
-    obj.y = randomNum(range);
-    obj.y = (obj.y * 83) + yOffset;
-    obj.speed = randomNum([50,300]);
+    this.x = 1;
+    this.y = randomNum(range);
+    this.y = (this.y * 83) + yOffset;
+    this.speed = randomNum([50,300]);
 }
 
 
@@ -65,16 +62,14 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    var obj = Object.create(Player.prototype);
-    obj.sprite = 'images/char-boy.png';
-    return obj;
+    this.sprite = 'images/char-boy.png';
 }
 
 Player.prototype = Object.create(Enemy.prototype);
 
-Player.prototype.setup = function(obj, loc) {
-    obj.x = loc[0];
-    obj.y = loc[1];
+Player.prototype.setup = function(loc) {
+    this.x = loc[0];
+    this.y = loc[1];
 }
 
 Player.prototype.update = function(dt) {
@@ -107,20 +102,20 @@ Player.prototype.handleInput = function(key) {
 */
 
 var enemyRange = [1, 3];
-var fred = Enemy();
-fred.setup(fred, enemyRange);
-var sam = Enemy();
-sam.setup(sam, enemyRange);
-var dave = Enemy();
-dave.setup(dave, enemyRange);
+var fred = new Enemy();
+fred.setup(enemyRange);
+var sam = new Enemy();
+sam.setup(enemyRange);
+var dave = new Enemy();
+dave.setup(enemyRange);
 var allEnemies = [fred, sam, dave];
 
 var test = Entity();
 
 var playerStart = [202, 332 + yOffset];
 var move = {x : playerStart[0], y : playerStart[1]};
-var player = Player();
-player.setup(player, playerStart);
+var player = new Player();
+player.setup(playerStart);
 
 
 // This listens for key presses and sends the keys to your
