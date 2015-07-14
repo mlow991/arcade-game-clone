@@ -37,7 +37,7 @@ Enemy.prototype = Object.create(Entity.prototype);
 
 Enemy.prototype.setup = function(range) {
 //    obj.init(range);
-    this.x = 1;
+    this.x = -101;
     this.y = randomNum(range);
     this.y = (this.y * 83) + yOffset;
     this.speed = randomNum([50,300]);
@@ -51,6 +51,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x + (dt * this.speed);
+    if (this.x > 505) {
+        this.x = -101;
+    }
 }
 
 // Draw the enemy on the screen, required method for game
