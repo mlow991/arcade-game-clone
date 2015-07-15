@@ -15,7 +15,7 @@ var heartNum = 5;
 var lives = heartNum;
 
 // Initial player starting point
-var playerStart = [2 * gridX, 4 * gridY + yOffset];
+var playerStart = [2 * gridX, 5 * gridY + yOffset];
 
 // Keeps track of current player location
 var move = {x : playerStart[0], y : playerStart[1]};
@@ -161,7 +161,7 @@ Player.prototype.handleInput = function(key) {
         move.y += gridY;
     if (key == 'space')
         start++;
-};
+}
 
 // Draws a rectangle with rounded corners and a translucent gradient
 function roundedRectFilled () {
