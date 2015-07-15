@@ -2,10 +2,11 @@ var yOffset = -28;
 var gridX = 101;
 var gridY = 83;
 var hitBox = 55;
-var heartNum = 5;
+var heartNum = 1;
 var lives = heartNum;
 var score = {val : 0, string : "00000"};
 var start = 0;
+var enSpeed = [50, 300];
 var keys;
 
 var Entity = function() {
@@ -19,9 +20,6 @@ Entity.prototype.collision = function() {
                move.x = playerStart[0];
                move.y = playerStart[1];
                lives--;
-               if (lives <= 0) {
-                console.log("gameover");
-               }
             }
         });
 }
@@ -57,7 +55,7 @@ Enemy.prototype.setup = function(range) {
     this.x = -gridX;
     this.y = randomNum(range);
     this.y = (this.y * gridY) + yOffset;
-    this.speed = randomNum([50,300]);
+    this.speed = randomNum(enSpeed);
 }
 
 
@@ -69,7 +67,7 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     this.x = this.x + (dt * this.speed);
-    if (this.x > 505) {
+    if (this.x > 5 * gridX) {
         this.x = -gridX;
     }
 }
@@ -79,28 +77,13 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     gameScore();
     if (lives <= 0) {
+        roundedRectFilled();
         ctx.font = "50px Verdana";
         ctx.fillStyle = "red";
         ctx.fillText("GAME OVER", 100, 300);
         endPrompt();
     }
     playerLives(lives);
-}
-
-function endPrompt() {
-    ctx.font = "30px Verdana";
-    ctx.fillText("Press SPACE to continue...", 65, 350);
-    if (start > 0) {
-        start = 0;
-        lives = heartNum;
-        score.val = 0;
-        keySet();
-    } else {
-        for (var key in keys) {
-            keys[key] = 'nothing';
-        }
-        keys.s = 'space';
-    }
 }
 
 // Now write your own player class
@@ -117,7 +100,7 @@ Player.prototype.setup = function(loc) {
     this.y = loc[1];
 }
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function() {
     //Use the handleInput function to update current position from keystrokes.
     //Bounds are (x: 0 to 404), (y: 55 to 387).
     //Global object 'move' holds the values for keys pressed.
@@ -125,7 +108,7 @@ Player.prototype.update = function(dt) {
     //It then resets its value to the bound of stoppage.
 //   console.log(move);
     player.collision();
-    if (move.x >= 0 && move.x <= 404) {
+    if (move.x >= 0 && move.x <= 4 * gridX) {
         this.x = move.x;
     } else {
         move.x = this.x;
@@ -137,7 +120,7 @@ Player.prototype.update = function(dt) {
         move.y = this.y;
         move.x = this.x;
         score.val++;
-    } else if (move.y <= 387) {
+    } else if (move.y <= 5 * gridY + yOffset) {
         this.y = move.y;
     } else {
         move.y = this.y;
@@ -162,7 +145,52 @@ Player.prototype.handleInput = function(key) {
         start++;
 };
 
+var rectX = 50;
+var rectY = 250;
+var rectW = 420;
+var rectH = 120;
+var rectR = 15;
 
+function roundedRectFilled () {
+    ctx.fillStyle = "blue";
+    ctx.beginPath();
+ 
+    ctx.moveTo(rectX+rectR, rectY);
+ 
+    ctx.lineTo(rectX+rectW-rectR, rectY);
+ 
+    ctx.quadraticCurveTo(rectX+rectW, rectY, rectX+rectW, rectY+rectR);
+ 
+    ctx.lineTo(rectX+rectW, rectY+rectH-rectR);
+ 
+    ctx.quadraticCurveTo(rectX+rectW, rectY+rectH, rectX+rectW-rectR, rectY+rectH);
+ 
+    ctx.lineTo(rectX+rectR, rectY+rectH);
+ 
+    ctx.quadraticCurveTo(rectX, rectY+rectH, rectX, rectY+rectH-rectR);
+ 
+    ctx.lineTo(rectX, rectY+rectR);
+ 
+    ctx.quadraticCurveTo(rectX, rectY, rectX+rectR, rectY);
+ 
+    ctx.fill();
+}
+
+function endPrompt() {
+    ctx.font = "30px Verdana";
+    ctx.fillText("Press SPACE to continue...", 60, 350);
+    if (start > 0) {
+        start = 0;
+        lives = heartNum;
+        score.val = 0;
+        keySet();
+    } else {
+        for (var key in keys) {
+            keys[key] = 'nothing';
+        }
+        keys.s = 'space';
+    }
+}
 
 function gameScore() {
     var count = score.val.toString().length;
@@ -202,7 +230,7 @@ var allEnemies = [fred];
 
 var test = Entity();
 
-var playerStart = [202, 332 + yOffset];
+var playerStart = [2 * gridX, 4 * gridY + yOffset];
 var move = {x : playerStart[0], y : playerStart[1]};
 var player = new Player();
 player.setup(playerStart);
