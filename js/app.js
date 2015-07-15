@@ -70,6 +70,7 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     gameScore();
+    playerLives(3);
 }
 
 // Now write your own player class
@@ -136,7 +137,14 @@ function gameScore() {
     ctx.font = "25px Verdana";
     ctx.fillStyle = "yellow";
     ctx.fillText("Score: " + score, 10, 100);
+}
 
+function playerLives(num) {
+    var img = new Image();
+    img.src = 'images/Heart.png';
+    for (i = 0; i < num; i++) {
+        ctx.drawImage(img, (470 - (i * 28)), 50, 25, 43);
+    }
 }
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
