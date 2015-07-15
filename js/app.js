@@ -2,7 +2,7 @@ var yOffset = -28;
 var gridX = 101;
 var gridY = 83;
 var hitBox = 55;
-var heartNum = 1;
+var heartNum = 5;
 var lives = heartNum;
 var score = {val : 0, string : "00000"};
 var start = 0;
@@ -78,6 +78,7 @@ Enemy.prototype.render = function() {
     gameScore();
     if (lives <= 0) {
         roundedRectFilled();
+        ctx.globalAlpha = 1;
         ctx.font = "50px Verdana";
         ctx.fillStyle = "red";
         ctx.fillText("GAME OVER", 100, 300);
@@ -145,34 +146,29 @@ Player.prototype.handleInput = function(key) {
         start++;
 };
 
-var rectX = 50;
-var rectY = 250;
-var rectW = 420;
-var rectH = 120;
-var rectR = 15;
-
 function roundedRectFilled () {
-    ctx.fillStyle = "blue";
+    var rectX = 50;
+    var rectY = 250;
+    var rectW = 420;
+    var rectH = 120;
+    var rectR = 15;
+    var gradient = ctx.createRadialGradient(2.5 * gridX, 3.75 * gridY, 60, 2.5 * gridX, 3.75 * gridY, 210);
+    gradient.addColorStop(0, "white");
+    gradient.addColorStop(1, "gray");
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = gradient;
+    // Rounded rectangle corners refernece: https://gmigdos.wordpress.com/2010/05/20/ja
+    // vascript-draw-a-rounded-rectangle-on-an-html-5-canvas/
     ctx.beginPath();
- 
-    ctx.moveTo(rectX+rectR, rectY);
- 
-    ctx.lineTo(rectX+rectW-rectR, rectY);
- 
-    ctx.quadraticCurveTo(rectX+rectW, rectY, rectX+rectW, rectY+rectR);
- 
-    ctx.lineTo(rectX+rectW, rectY+rectH-rectR);
- 
-    ctx.quadraticCurveTo(rectX+rectW, rectY+rectH, rectX+rectW-rectR, rectY+rectH);
- 
-    ctx.lineTo(rectX+rectR, rectY+rectH);
- 
-    ctx.quadraticCurveTo(rectX, rectY+rectH, rectX, rectY+rectH-rectR);
- 
-    ctx.lineTo(rectX, rectY+rectR);
- 
-    ctx.quadraticCurveTo(rectX, rectY, rectX+rectR, rectY);
- 
+    ctx.moveTo(rectX + rectR, rectY);
+    ctx.lineTo(rectX + rectW - rectR, rectY);
+    ctx.quadraticCurveTo(rectX + rectW, rectY, rectX + rectW, rectY + rectR);
+    ctx.lineTo(rectX + rectW, rectY + rectH - rectR);
+    ctx.quadraticCurveTo(rectX + rectW, rectY + rectH, rectX + rectW - rectR, rectY + rectH);
+    ctx.lineTo(rectX + rectR, rectY + rectH);
+    ctx.quadraticCurveTo(rectX, rectY + rectH, rectX, rectY + rectH - rectR);
+    ctx.lineTo(rectX, rectY + rectR);
+    ctx.quadraticCurveTo(rectX, rectY, rectX + rectR, rectY);
     ctx.fill();
 }
 
@@ -226,7 +222,11 @@ var sam = new Enemy();
 sam.setup(enemyRange);
 var dave = new Enemy();
 dave.setup(enemyRange);
-var allEnemies = [fred];
+var joe = new Enemy();
+joe.setup(enemyRange);
+var rob = new Enemy();
+rob.setup(enemyRange);
+var allEnemies = [fred, sam, dave, joe, rob];
 
 var test = Entity();
 
