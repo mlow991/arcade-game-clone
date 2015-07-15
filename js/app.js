@@ -1,4 +1,5 @@
 var yOffset = -28;
+var lives = 5;
 
 var Entity = function() {
 
@@ -14,7 +15,11 @@ Entity.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
             if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= 20) {
                move.x = playerStart[0];
-               move.y = playerStart[1]; 
+               move.y = playerStart[1];
+               lives--;
+               if (lives <= 0) {
+                console.log("gameover");
+               }
             }
         });
 }
@@ -70,7 +75,7 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     gameScore();
-    playerLives(3);
+    playerLives(lives);
 }
 
 // Now write your own player class
@@ -93,7 +98,7 @@ Player.prototype.update = function(dt) {
     //Global object 'move' holds the values for keys pressed.
     //When 'move' encounters a value that is offscreen, it does not update the player object.
     //It then resets its value to the bound of stoppage.
-   console.log(move);
+//   console.log(move);
     player.collision();
     if (move.x >= 0 && move.x <= 404) {
         this.x = move.x;
@@ -143,7 +148,7 @@ function playerLives(num) {
     var img = new Image();
     img.src = 'images/Heart.png';
     for (i = 0; i < num; i++) {
-        ctx.drawImage(img, (470 - (i * 28)), 50, 25, 43);
+        ctx.drawImage(img, (470 - (i * 28)), 50, 27, 43);
     }
 }
 // Now instantiate your objects.
