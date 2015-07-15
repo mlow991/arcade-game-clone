@@ -31,7 +31,7 @@ var enemySpeed = [50, 300];
 var enemyRange = [1, 3];
 
 // Difficulty or number of enemies that spawn in the game
-var enemyNum = 5;
+var enemyNum = 4;
 
 // Controls the usage of the input keys for the game. Restricts usage depending on moment in game.
 var keys;
@@ -69,8 +69,8 @@ Enemy.prototype.update = function(dt) {
     // Multiply movement by dt parameter to ensure consistent speed for all devices
     this.x = this.x + (dt * this.speed);
     if (this.x > 5 * gridX) {
-        // When enemy reaches the end it is sent back to its origin
-        this.x = -gridX;
+        // When enemy reaches the end it is reinstantiated for complete pseudo randomness
+        this.setup();
     }
 }
 
