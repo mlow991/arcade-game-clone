@@ -116,7 +116,8 @@ Player.prototype.update = function(dt) {
         this.y = playerStart[1];
         move.y = this.y;
         move.x = this.x;
-        score++;
+        score.val++;
+        score.tens++;
     } else if (move.y <= 387) {
         this.y = move.y;
     } else {
@@ -140,13 +141,14 @@ Player.prototype.handleInput = function(key) {
         move.y += 83;
 };
 
-var score = 0;
-
+var score = {val : 0, string : "00000", tens : 0};
 
 function gameScore() {
+    var count = score.tens / 10;
+    count = Math.round(Math.floor(count));
     ctx.font = "25px Verdana";
     ctx.fillStyle = "yellow";
-    ctx.fillText("Score: " + score, 10, 100);
+    ctx.fillText(score.string.substring(0, score.string.length - count) + score.val, 5, 80);
 }
 
 function playerLives(num) {
@@ -156,6 +158,7 @@ function playerLives(num) {
         ctx.drawImage(img, (470 - (i * 28)), 50, 27, 43);
     }
 }
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
