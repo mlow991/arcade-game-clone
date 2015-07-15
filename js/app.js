@@ -13,7 +13,7 @@ Entity.prototype.init = function(loc) {
 // Returns the player back to origin if he has collided with an enemy
 Entity.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
-            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= 20) {
+            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= 50) {
                move.x = playerStart[0];
                move.y = playerStart[1];
                lives--;
@@ -75,6 +75,11 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     gameScore();
+    if (lives <= 0) {
+        ctx.font = "50px Verdana";
+        ctx.fillStyle = "red";
+        ctx.fillText("GAME OVER", 100, 300);
+    }
     playerLives(lives);
 }
 
