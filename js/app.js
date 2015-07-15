@@ -1,19 +1,21 @@
 var yOffset = -28;
-var lives = 5;
+var gridX = 101;
+var gridY = 83;
+var hitBox = 55;
+var heartNum = 5;
+var lives = heartNum;
+var score = {val : 0, string : "00000"};
+var start = 0;
+var keys;
 
 var Entity = function() {
 
 }
 
-Entity.prototype.init = function(loc) {
-    this.x = loc[0];
-    this.y = loc[1];
-}
-
 // Returns the player back to origin if he has collided with an enemy
 Entity.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
-            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= 50) {
+            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= hitBox) {
                move.x = playerStart[0];
                move.y = playerStart[1];
                lives--;
@@ -52,9 +54,9 @@ Enemy.prototype = Object.create(Entity.prototype);
 
 Enemy.prototype.setup = function(range) {
 //    obj.init(range);
-    this.x = -101;
+    this.x = -gridX;
     this.y = randomNum(range);
-    this.y = (this.y * 83) + yOffset;
+    this.y = (this.y * gridY) + yOffset;
     this.speed = randomNum([50,300]);
 }
 
@@ -65,9 +67,10 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
     this.x = this.x + (dt * this.speed);
     if (this.x > 505) {
-        this.x = -101;
+        this.x = -gridX;
     }
 }
 
@@ -79,8 +82,25 @@ Enemy.prototype.render = function() {
         ctx.font = "50px Verdana";
         ctx.fillStyle = "red";
         ctx.fillText("GAME OVER", 100, 300);
+        endPrompt();
     }
     playerLives(lives);
+}
+
+function endPrompt() {
+    ctx.font = "30px Verdana";
+    ctx.fillText("Press SPACE to continue...", 65, 350);
+    if (start > 0) {
+        start = 0;
+        lives = heartNum;
+        score.val = 0;
+        keySet();
+    } else {
+        for (var key in keys) {
+            keys[key] = 'nothing';
+        }
+        keys.s = 'space';
+    }
 }
 
 // Now write your own player class
@@ -111,13 +131,12 @@ Player.prototype.update = function(dt) {
         move.x = this.x;
     }
     //If the player has scored send him back to the origin and reset the global move variable
-    if (move.y < 55) {
+    if (move.y < gridY + yOffset) {
         this.x = playerStart[0];
         this.y = playerStart[1];
         move.y = this.y;
         move.x = this.x;
         score.val++;
-        score.tens++;
     } else if (move.y <= 387) {
         this.y = move.y;
     } else {
@@ -132,23 +151,24 @@ Player.prototype.handleInput = function(key) {
     //It adds or subtracts from the global position variable for the player.
     //The logic for player movement is within the update function.
     if (key == 'left')
-        move.x += -101;
+        move.x += -gridX;
     if (key == 'up')
-        move.y += -83;
+        move.y += -gridY;
     if (key == 'right')
-        move.x += 101;
+        move.x += gridX;
     if (key == 'down')
-        move.y += 83;
+        move.y += gridY;
+    if (key == 'space')
+        start++;
 };
 
-var score = {val : 0, string : "00000", tens : 0};
+
 
 function gameScore() {
-    var count = score.tens / 10;
-    count = Math.round(Math.floor(count));
-    ctx.font = "25px Verdana";
+    var count = score.val.toString().length;
+    ctx.font = "25px Consolas";
     ctx.fillStyle = "yellow";
-    ctx.fillText(score.string.substring(0, score.string.length - count) + score.val, 5, 80);
+    ctx.fillText(score.string.substring(0, score.string.length - count + 1) + score.val, 10, 80);
 }
 
 function playerLives(num) {
@@ -158,6 +178,8 @@ function playerLives(num) {
         ctx.drawImage(img, (470 - (i * 28)), 50, 27, 43);
     }
 }
+
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -176,7 +198,7 @@ var sam = new Enemy();
 sam.setup(enemyRange);
 var dave = new Enemy();
 dave.setup(enemyRange);
-var allEnemies = [fred, sam, dave];
+var allEnemies = [fred];
 
 var test = Entity();
 
@@ -185,15 +207,25 @@ var move = {x : playerStart[0], y : playerStart[1]};
 var player = new Player();
 player.setup(playerStart);
 
+function keySet() {
+    keys = {'l' : 'left',
+            'r' : 'right',
+            'u' : 'up',
+            'd' : 'down',
+            's' : 'space'
+            };
+}
 
+keySet();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        37: keys.l,
+        38: keys.u,
+        39: keys.r,
+        40: keys.d,
+        32: keys.s
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
