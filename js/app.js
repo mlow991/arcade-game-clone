@@ -9,10 +9,13 @@ Entity.prototype.init = function(loc) {
     this.y = loc[1];
 }
 
+// Returns the player back to origin if he has collided with an enemy
 Entity.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
-            if (enemy.x == player.x && enemy.y == player.y)
-                console.log("collision");
+            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= 20) {
+               move.x = playerStart[0];
+               move.y = playerStart[1]; 
+            }
         });
 }
 
@@ -89,6 +92,7 @@ Player.prototype.update = function(dt) {
     //When 'move' encounters a value that is offscreen, it does not update the player object.
     //It then resets its value to the bound of stoppage.
 //    console.log(move);
+    player.collision();
     if (move.x >= 0 && move.x <= 404) {
         this.x = move.x;
     } else {
@@ -104,7 +108,7 @@ Player.prototype.update = function(dt) {
     } else {
         move.y = this.y;
     }
-    player.collision();
+
 }
 
 
