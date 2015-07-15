@@ -69,6 +69,7 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    gameScore();
 }
 
 // Now write your own player class
@@ -91,18 +92,20 @@ Player.prototype.update = function(dt) {
     //Global object 'move' holds the values for keys pressed.
     //When 'move' encounters a value that is offscreen, it does not update the player object.
     //It then resets its value to the bound of stoppage.
-//    console.log(move);
+   console.log(move);
     player.collision();
     if (move.x >= 0 && move.x <= 404) {
         this.x = move.x;
     } else {
         move.x = this.x;
     }
-
+    //If the player has scored send him back to the origin and reset the global move variable
     if (move.y < 55) {
         this.x = playerStart[0];
         this.y = playerStart[1];
         move.y = this.y;
+        move.x = this.x;
+        score++;
     } else if (move.y <= 387) {
         this.y = move.y;
     } else {
@@ -126,6 +129,15 @@ Player.prototype.handleInput = function(key) {
         move.y += 83;
 };
 
+var score = 0;
+
+
+function gameScore() {
+    ctx.font = "25px Verdana";
+    ctx.fillStyle = "yellow";
+    ctx.fillText("Score: " + score, 10, 100);
+
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
