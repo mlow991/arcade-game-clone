@@ -2,11 +2,13 @@ var yOffset = -28;
 var gridX = 101;
 var gridY = 83;
 var hitBox = 55;
-var heartNum = 5;
+var heartNum = 1;
 var lives = heartNum;
 var score = {val : 0, string : "00000"};
 var start = 0;
-var enSpeed = [50, 300];
+var enemySpeed = [50, 300];
+var enemyRange = [1, 3];
+var enemyNum = 5;
 var keys;
 
 var Entity = function() {
@@ -55,7 +57,7 @@ Enemy.prototype.setup = function(range) {
     this.x = -gridX;
     this.y = randomNum(range);
     this.y = (this.y * gridY) + yOffset;
-    this.speed = randomNum(enSpeed);
+    this.speed = randomNum(enemySpeed);
 }
 
 
@@ -81,7 +83,7 @@ Enemy.prototype.render = function() {
         ctx.globalAlpha = 1;
         ctx.font = "50px Verdana";
         ctx.fillStyle = "red";
-        ctx.fillText("GAME OVER", 100, 300);
+        ctx.fillText("GAME OVER", 95, 300);
         endPrompt();
     }
     playerLives(lives);
@@ -147,7 +149,7 @@ Player.prototype.handleInput = function(key) {
 };
 
 function roundedRectFilled () {
-    var rectX = 50;
+    var rectX = 45;
     var rectY = 250;
     var rectW = 420;
     var rectH = 120;
@@ -155,7 +157,7 @@ function roundedRectFilled () {
     var gradient = ctx.createRadialGradient(2.5 * gridX, 3.75 * gridY, 60, 2.5 * gridX, 3.75 * gridY, 210);
     gradient.addColorStop(0, "white");
     gradient.addColorStop(1, "gray");
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.3;
     ctx.fillStyle = gradient;
     // Rounded rectangle corners refernece: https://gmigdos.wordpress.com/2010/05/20/ja
     // vascript-draw-a-rounded-rectangle-on-an-html-5-canvas/
@@ -174,7 +176,7 @@ function roundedRectFilled () {
 
 function endPrompt() {
     ctx.font = "30px Verdana";
-    ctx.fillText("Press SPACE to continue...", 60, 350);
+    ctx.fillText("Press SPACE to continue...", 55, 350);
     if (start > 0) {
         start = 0;
         lives = heartNum;
@@ -215,20 +217,18 @@ function playerLives(num) {
     where p1 is an array of x, y coordinates
 */
 
-var enemyRange = [1, 3];
-var fred = new Enemy();
-fred.setup(enemyRange);
-var sam = new Enemy();
-sam.setup(enemyRange);
-var dave = new Enemy();
-dave.setup(enemyRange);
-var joe = new Enemy();
-joe.setup(enemyRange);
-var rob = new Enemy();
-rob.setup(enemyRange);
-var allEnemies = [fred, sam, dave, joe, rob];
+function enemyCreate(num) {
+    var enemies = [];
+    for (i = 0; i < num; i++) {
+        var name = i;
+        name = new Enemy();
+        name.setup(enemyRange);
+        enemies.push(name);
+    }
+    return enemies;
+}
 
-var test = Entity();
+var allEnemies = enemyCreate(enemyNum);
 
 var playerStart = [2 * gridX, 4 * gridY + yOffset];
 var move = {x : playerStart[0], y : playerStart[1]};
@@ -240,7 +240,7 @@ function keySet() {
             'r' : 'right',
             'u' : 'up',
             'd' : 'down',
-            's' : 'space'
+            's' : 'nothing'
             };
 }
 
