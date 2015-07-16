@@ -2,8 +2,8 @@
 var yOffset = -28;
 
 // X and Y lane dimensions that are the same as in the engine.js
-var gridX = 101;
-var gridY = 83;
+var GRID_X = 101;
+var GRID_Y = 83;
 
 // Size of the collision box for the player and enemy
 var hitBox = 55;
@@ -15,7 +15,7 @@ var heartNum = 5;
 var lives = heartNum;
 
 // Initial player starting point
-var playerStart = [2 * gridX, 5 * gridY + yOffset];
+var playerStart = [2 * GRID_X, 5 * GRID_Y + yOffset];
 
 // Keeps track of current player location
 var move = {x : playerStart[0], y : playerStart[1]};
@@ -52,15 +52,15 @@ var Enemy = function() {
     // x and y variables are set by the setup function
     // lane and speed variables are randomly generated with randomNum fn  
     this.sprite = 'images/enemy-bug.png';
-}
+};
 
 // Sets random initial location, and random speed
 Enemy.prototype.setup = function() {
-    this.x = -gridX;
+    this.x = -GRID_X;
     this.y = randomNum(enemyRange);
-    this.y = (this.y * gridY) + yOffset;
+    this.y = (this.y * GRID_Y) + yOffset;
     this.speed = randomNum(enemySpeed);
-}
+};
 
 
 // Update the enemy's position, required method for game
@@ -68,11 +68,11 @@ Enemy.prototype.setup = function() {
 Enemy.prototype.update = function(dt) {
     // Multiply movement by dt parameter to ensure consistent speed for all devices
     this.x = this.x + (dt * this.speed);
-    if (this.x > 5 * gridX) {
+    if (this.x > 5 * GRID_X) {
         // When enemy reaches the end it is reinstantiated for complete pseudo randomness
         this.setup();
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -88,34 +88,36 @@ Enemy.prototype.render = function() {
         endPrompt();
     }
     playerLives(lives);
-}
+};
 
 // Player object that is controlled by the user
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-}
+};
 
 // Player prototype inherits the Enemy prototype chain
 Player.prototype = Object.create(Enemy.prototype);
+Player.prototype.constructor = Player;
 
 // Sets player initial location at defined origin
 Player.prototype.setup = function(loc) {
     this.x = loc[0];
     this.y = loc[1];
-}
+};
 
 // Returns the player back to origin if he has collided with an enemy
 Player.prototype.collision = function() {
     // Checks to see if each enemy is within the specified range of the Player
     // If so, a life/heart is subtracted
+    var self = this;
     allEnemies.forEach(function(enemy) {
-            if (enemy.y == player.y && Math.abs(enemy.x - player.x) <= hitBox) {
-               move.x = playerStart[0];
-               move.y = playerStart[1];
-               lives--;
-            }
-        });
-}
+        if (enemy.y == self.y && Math.abs(enemy.x - self.x) <= hitBox) {
+           move.x = playerStart[0];
+           move.y = playerStart[1];
+           lives--;
+        }
+    });
+};
 
 // Updates the current position of the player
 Player.prototype.update = function() {
@@ -124,27 +126,28 @@ Player.prototype.update = function() {
     // Global object 'move' holds the values for keys pressed.
     // When 'move' encounters a value that is offscreen, it does not update the player object.
     // It then resets its value to the bound of stoppage.
-    player.collision();
-    if (move.x >= 0 && move.x <= 4 * gridX) {
+    var self = this;
+    self.collision();
+    if (move.x >= 0 && move.x <= 4 * GRID_X) {
         this.x = move.x;
     } else {
         move.x = this.x;
     }
     // If the player has scored send him back to the origin and reset the global move variable
     // Update the score
-    if (move.y < gridY + yOffset) {
+    if (move.y < GRID_Y + yOffset) {
         this.x = playerStart[0];
         this.y = playerStart[1];
         move.y = this.y;
         move.x = this.x;
         score.val++;
-    } else if (move.y <= 5 * gridY + yOffset) {
+    } else if (move.y <= 5 * GRID_Y + yOffset) {
         this.y = move.y;
     } else {
         move.y = this.y;
     }
 
-}
+};
 
 // Takes key press values and turns them into values of movement which specify direction
 Player.prototype.handleInput = function(key) {
@@ -152,16 +155,16 @@ Player.prototype.handleInput = function(key) {
     // It adds or subtracts from the global position variable for the player.
     // The logic for player movement is within the update function.
     if (key == 'left')
-        move.x += -gridX;
+        move.x += -GRID_X;
     if (key == 'up')
-        move.y += -gridY;
+        move.y += -GRID_Y;
     if (key == 'right')
-        move.x += gridX;
+        move.x += GRID_X;
     if (key == 'down')
-        move.y += gridY;
+        move.y += GRID_Y;
     if (key == 'space')
         start++;
-}
+};
 
 // Draws a rectangle with rounded corners and a translucent gradient
 function roundedRectFilled () {
@@ -170,7 +173,7 @@ function roundedRectFilled () {
     var rectW = 420;
     var rectH = 120;
     var rectR = 15;
-    var gradient = ctx.createRadialGradient(2.5 * gridX, 3.75 * gridY, 60, 2.5 * gridX, 3.75 * gridY, 210);
+    var gradient = ctx.createRadialGradient(2.5 * GRID_X, 3.75 * GRID_Y, 60, 2.5 * GRID_X, 3.75 * GRID_Y, 210);
     gradient.addColorStop(0, "white");
     gradient.addColorStop(1, "gray");
     ctx.globalAlpha = 0.3;
@@ -205,7 +208,8 @@ function endPrompt() {
         // If the game is not to be restarted then deactivate the arrow keys so that the player cannot move
         // Activate the space key so that it can be pressed
         for (var key in keys) {
-            keys[key] = 'nothing';
+            if (keys.hasOwnProperty(key))
+                keys[key] = 'nothing';
         }
         keys.s = 'space';
     }
