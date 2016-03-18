@@ -1,10 +1,5 @@
 frontend-nanodegree-arcade-game
 ===============================
-
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
-
-for self-checking their submission.
-===============================
 FROGGER CLONE README
 -To play this game open index.html in a web browser.
 -Use the Up, Down, Left, and Right arrow keys to control the player.
